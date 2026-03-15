@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azania Checkout</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+margin:0;
+padding:20px;
+background:#043927;
+}
+
+.checkout-container{
+max-width:800px;
+margin:auto;
+background:#fff;
+padding:30px;
+border-radius:10px;
+}
+
+h1,h2{
+text-align:center;
+color:#043927;
+}
+
+.billing-section input{
+width:100%;
+padding:10px;
+margin:8px 0;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+.summary-section{
+margin-top:30px;
+}
+
+#order-summary{
+list-style:none;
+padding:0;
+}
+
+button{
+margin-top:20px;
+padding:12px 30px;
+font-size:16px;
+background:#043927;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#056848;
+}
+</style>
+</head>
+
+<body>
+
+<main class="checkout-container">
+
+<h1>Checkout</h1>
+
+<section class="billing-section">
+<h2>Shipping Information</h2>
+
+<form id="checkout-form">
+
+<input type="text" id="fullName" placeholder="Full Name" required>
+<input type="email" id="email" placeholder="Email" required>
+<input type="text" id="address" placeholder="Address" required>
+<input type="text" id="city" placeholder="City" required>
+<input type="text" id="postal" placeholder="Postal Code" required>
+<input type="text" id="country" placeholder="Country" required>
+
+</form>
+
+</section>
+
+
+<section class="summary-section">
+
+<h2>Order Summary</h2>
+
+<ul id="order-summary"></ul>
+
+<h3>Total: R<span id="order-total">0.00</span></h3>
+
+<button onclick="completeCheckout()">Place Order</button>
+
+</section>
+
+</main>
+
+<script>
+
+/* =============================
+AZANIA API
+============================= */
+
+const API_URL = "http://localhost:5000/api/orders";
+const PRODUCT_API = "http://localhost:5000/api/products";
+
+
+/* =============================
+GET USER
+============================= */
+
+function getUser(){
+return JSON.parse(localStorage.getItem("azaniaUser"));
+}
+
+function getToken(){
+return localStorage.getItem("azaniaToken");
+}
+
+
+/* =============================
+GET CART
+============================= */
+
+function getCart(){
+return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+
+/* =============================
+LOAD CART PRODUCTS FROM API
+============================= */
+
+async function renderSummary(){
+
+const cart = getCart();
+const summaryList = document.getElementById("order-summary");
+const totalElement = document.getElementById("order-total");
+
+summaryList.innerHTML="";
+
+if(cart.length===0){
+summaryList.innerHTML="<li>Your cart is empty</li>";
+return;
+}
+
+let total = 0;
+
+try{
+
+const res = await fetch(PRODUCT_API);
+const products = await res.json();
+
+cart.forEach(cartItem => {
+
+const product = products.find(p => p._id === cartItem);
+
+if(!product) return;
+
+total += product.price;
+
+const li = document.createElement("li");
+
+li.textContent = `${product.name} - R${product.price}`;
+
+summaryList.appendChild(li);
+
+});
+
+totalElement.textContent = total.toFixed(2);
+
+}catch(err){
+
+console.error(err);
+summaryList.innerHTML="<li>Failed to load cart</li>";
+
+}
+
+}
+
+
+/* =============================
+COMPLETE CHECKOUT
+============================= */
+
+async function completeCheckout(){
+
+const user = getUser();
+const token = getToken();
+const cart = getCart();
+
+if(!user){
+alert("Please login first");
+return;
+}
+
+if(cart.length===0){
+alert("Cart is empty");
+return;
+}
+
+const shippingAddress = {
+
+fullName: document.getElementById("fullName").value,
+email: document.getElementById("email").value,
+address: document.getElementById("address").value,
+city: document.getElementById("city").value,
+postal: document.getElementById("postal").value,
+country: document.getElementById("country").value
+
+};
+
+
+try{
+
+/* Fetch product details */
+
+const productRes = await fetch(PRODUCT_API);
+const products = await productRes.json();
+
+const items = cart.map(id => {
+
+const product = products.find(p => p._id === id);
+
+return{
+product: id,
+name: product.name,
+price: product.price,
+quantity: 1
+}
+
+});
+
+
+const totalAmount = items.reduce((sum,i)=>sum+i.price*i.quantity,0);
+
+
+const orderData = {
+
+userId:user.id,
+items,
+totalAmount,
+shippingAddress
+
+};
+
+
+const response = await fetch(API_URL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+token
+},
+
+body:JSON.stringify(orderData)
+
+});
+
+const data = await response.json();
+
+if(!response.ok){
+alert(data.message || "Order failed");
+return;
+}
+
+/* Clear cart */
+
+localStorage.removeItem("cart");
+
+/* Save order */
+
+localStorage.setItem("lastOrder",JSON.stringify(data.order));
+
+/* Redirect */
+
+window.location.href="order-confirmation.html";
+
+}catch(err){
+
+console.error(err);
+
+alert("Checkout failed");
+
+}
+
+}
+
+
+/* =============================
+INIT
+============================= */
+
+document.addEventListener("DOMContentLoaded",renderSummary);
+
+</script>
+
+</body>
+</html>

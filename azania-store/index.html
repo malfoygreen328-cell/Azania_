@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Azania Marketplace | Discover Unique Fashion From Local Brands</title>
+
+<meta name="description" content="Shop unique fashion from local brands on Azania Marketplace. Discover clothing, accessories and trending styles with secure checkout and fast delivery across South Africa.">
+
+<meta name="keywords" content="online shopping South Africa, local fashion marketplace, buy clothing online, Azania marketplace">
+
+<meta name="author" content="Azania Marketplace">
+
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://azania.co.za/">
+
+<!-- Open Graph -->
+
+<meta property="og:title" content="Azania Marketplace – Discover Unique Fashion">
+<meta property="og:description" content="Shop unique fashion from local brands. Explore trending styles and authentic products.">
+<meta property="og:image" content="https://azania.co.za/images/preview.jpg">
+<meta property="og:url" content="https://azania.co.za">
+<meta property="og:type" content="website">
+
+<!-- Twitter Card -->
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Azania Marketplace – Discover Unique Fashion">
+<meta name="twitter:description" content="Shop unique fashion from local brands on Azania Marketplace.">
+<meta name="twitter:image" content="https://azania.co.za/images/preview.jpg">
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Structured Data -->
+
+<script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"Organization",
+ "name":"Azania Marketplace",
+ "url":"https://azania.co.za",
+ "logo":"https://azania.co.za/images/logo.png",
+ "sameAs":[
+  "https://facebook.com/azania",
+  "https://instagram.com/azania",
+  "https://twitter.com/azania"
+ ]
+}
+</script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#fff;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:relative;
+padding:1rem 2rem;
+background:#043927;
+color:white;
+}
+
+.logo{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+}
+
+.nav-section.right{
+display:flex;
+align-items:center;
+gap:1rem;
+}
+
+.nav-btn{
+border:1px solid white;
+padding:6px 12px;
+border-radius:4px;
+text-decoration:none;
+color:white;
+font-size:0.9rem;
+}
+
+.nav-btn:hover{
+background:white;
+color:#043927;
+}
+
+.cart-icon{
+position:relative;
+}
+
+.cart-count{
+position:absolute;
+top:-8px;
+right:-10px;
+background:#e94f37;
+color:white;
+border-radius:50%;
+padding:2px 6px;
+font-size:12px;
+}
+
+/* HERO */
+
+.hero{
+background:url('Hme.jpg') center/cover no-repeat;
+height:90vh;
+display:flex;
+align-items:center;
+padding-left:5%;
+color:white;
+}
+
+.hero-content{
+max-width:400px;
+}
+
+.hero h1{
+font-size:2.5rem;
+}
+
+.btn{
+background:#e94f37;
+padding:0.8rem 1.5rem;
+color:white;
+text-decoration:none;
+font-weight:bold;
+border-radius:4px;
+}
+
+/* PRODUCTS */
+
+.products{
+padding:60px 10%;
+}
+
+.products h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+.products p{
+text-align:center;
+max-width:700px;
+margin:auto;
+margin-bottom:40px;
+}
+
+.products-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:30px;
+}
+
+.product-card{
+border:1px solid #eee;
+padding:15px;
+text-align:center;
+border-radius:6px;
+transition:0.3s;
+}
+
+.product-card:hover{
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+.product-card img{
+width:100%;
+height:200px;
+object-fit:cover;
+}
+
+.product-card h3{
+font-size:1rem;
+margin:10px 0;
+}
+
+.price{
+font-weight:bold;
+color:#043927;
+}
+
+.add-cart{
+margin-top:10px;
+background:#043927;
+color:white;
+border:none;
+padding:8px 12px;
+cursor:pointer;
+border-radius:4px;
+}
+
+/* FOOTER */
+
+.footer{
+background:#043927;
+color:white;
+padding:3rem 2rem 1.2rem;
+}
+
+.footer-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:2.5rem;
+max-width:1200px;
+margin:auto;
+}
+
+.footer-column h3,
+.footer-column h4{
+margin-bottom:1rem;
+}
+
+.footer-column ul{
+list-style:none;
+padding:0;
+}
+
+.footer-column ul li{
+margin-bottom:0.6rem;
+}
+
+.footer-column ul li a{
+color:white;
+text-decoration:none;
+}
+
+.footer-column ul li a:hover{
+color:#e94f37;
+}
+
+.social-icons a{
+margin-right:12px;
+color:white;
+text-decoration:none;
+}
+
+.footer-bottom{
+text-align:center;
+margin-top:2rem;
+border-top:1px solid rgba(255,255,255,0.2);
+padding-top:1rem;
+font-size:0.85rem;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+<div></div>
+
+<div class="logo">
+<img src="A.jpg" width="60" alt="Azania Marketplace Logo">
+</div>
+
+<div class="nav-section right">
+
+<a href="login.html" class="nav-btn">Login</a>
+
+<i class="fas fa-search"></i>
+<i class="fas fa-user"></i>
+
+<div class="cart-icon">
+<i class="fas fa-shopping-cart"></i>
+<span class="cart-count" id="cart-count">0</span>
+</div>
+
+</div>
+
+</nav>
+
+<!-- HERO -->
+
+<header class="hero">
+
+<div class="hero-content">
+
+<h1>Discover Unique Fashion From Local Brands</h1>
+
+<p>Explore the latest fashion trends from trusted vendors on Azania Marketplace.</p>
+
+<a href="signup.html" class="btn">Shop Now</a>
+
+</div>
+
+</header>
+
+<!-- PRODUCTS -->
+
+<section class="products">
+
+<h2>Latest Products</h2>
+
+<p>
+Browse the latest fashion products from trusted vendors on Azania Marketplace.
+Discover unique clothing, accessories, and trending styles from local brands.
+</p>
+
+<div class="products-grid" id="products"></div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+<div class="footer-container">
+
+<div class="footer-column">
+<h3>Azania Marketplace</h3>
+<p>Discover unique fashion from local brands. Shop authentic, shop Azania.</p>
+</div>
+
+<div class="footer-column">
+<h4>Support</h4>
+<ul>
+<li><a href="#">Help Center</a></li>
+<li><a href="#">Returns</a></li>
+<li><a href="#">Privacy Policy</a></li>
+<li><a href="#">Terms</a></li>
+</ul>
+</div>
+
+<div class="footer-column">
+<h4>Follow Us</h4>
+<div class="social-icons">
+<a href="#">Facebook</a>
+<a href="#">Instagram</a>
+<a href="#">Twitter</a>
+</div>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+<p>© <span id="year"></span> Azania Marketplace</p>
+</div>
+
+</footer>
+
+<script>
+
+/* API URL */
+
+const API_URL = "http://localhost:5000/api/v1/public/products";
+
+/* LOAD PRODUCTS */
+
+async function loadProducts(){
+
+try{
+
+const response = await fetch(API_URL);
+
+const data = await response.json();
+
+const container = document.getElementById("products");
+
+data.products.forEach(product=>{
+
+const card = document.createElement("div");
+
+card.className="product-card";
+
+card.innerHTML=`
+
+<img loading="lazy"
+src="${product.image || 'https://via.placeholder.com/300'}"
+alt="${product.name} fashion product">
+
+<h3>${product.name}</h3>
+
+<p class="price">R${product.price}</p>
+
+<button class="add-cart">Add to Cart</button>
+
+`;
+
+card.querySelector(".add-cart")
+.addEventListener("click",()=>addToCart(product));
+
+container.appendChild(card);
+
+});
+
+}
+
+catch(error){
+
+console.error("Error loading products",error);
+
+}
+
+}
+
+/* CART SYSTEM */
+
+function addToCart(product){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+cart.push(product);
+
+localStorage.setItem("cart",JSON.stringify(cart));
+
+updateCartCount();
+
+}
+
+function updateCartCount(){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+document.getElementById("cart-count").innerText = cart.length;
+
+}
+
+/* INIT */
+
+loadProducts();
+
+updateCartCount();
+
+/* FOOTER YEAR */
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+<script>
+
+/* ===========================
+AZANIA API CONFIG
+=========================== */
+
+const API_BASE = "http://localhost:5000/api/v1/public"
+
+
+/* ===========================
+SIDEBAR
+=========================== */
+
+const hamburgerBtn = document.getElementById("hamburger-btn")
+const sidebar = document.getElementById("sidebar")
+
+hamburgerBtn.onclick = e=>{
+e.stopPropagation()
+sidebar.classList.toggle("open")
+}
+
+document.addEventListener("click",e=>{
+if(!sidebar.contains(e.target)&&!hamburgerBtn.contains(e.target)){
+sidebar.classList.remove("open")
+}
+})
+
+
+/* ===========================
+LANGUAGE SYSTEM
+=========================== */
+
+let translations = {}
+
+async function loadLanguage(lang){
+
+try{
+
+const res = await fetch(`${API_BASE}/language/${lang}`)
+const data = await res.json()
+
+translations = data.data
+
+applyTranslations()
+
+localStorage.setItem("azaniaLang", lang)
+
+}catch(err){
+
+console.error("Language error",err)
+
+}
+
+}
+
+
+function applyTranslations(){
+
+document.getElementById("searchInput").placeholder = translations.searchPlaceholder
+
+document.querySelector("#filterCategory").previousElementSibling.textContent = translations.category
+document.querySelector("#filterPrice").previousElementSibling.textContent = translations.price
+
+const sidebarLinks = document.querySelectorAll(".sidebar a")
+
+if(sidebarLinks.length >= 4){
+
+sidebarLinks[0].textContent = translations.male
+sidebarLinks[1].textContent = translations.female
+sidebarLinks[2].textContent = translations.newArrivals
+sidebarLinks[3].textContent = translations.accessories
+
+}
+
+updateGreeting()
+
+renderProducts(allProducts)
+
+}
+
+
+/* ===========================
+GREETING
+=========================== */
+
+function updateGreeting(){
+
+let name="Guest"
+
+try{
+
+const user = JSON.parse(localStorage.getItem("azaniaUser"))
+
+if(user && user.name){
+name=user.name
+}
+
+}catch(e){}
+
+const greet = translations.greeting || "Hello"
+
+document.getElementById("greeting").textContent = `${greet}, ${name}`
+
+}
+
+
+/* ===========================
+LOAD PRODUCTS
+=========================== */
+
+let allProducts = []
+
+async function loadProducts(){
+
+const container = document.getElementById("products")
+
+container.innerHTML = translations.loadingProducts || "Loading products..."
+
+try{
+
+const res = await fetch(`${API_BASE}/products`)
+
+if(!res.ok) throw new Error("Failed")
+
+const data = await res.json()
+
+allProducts = data
+
+renderProducts(data)
+
+}catch(err){
+
+container.innerHTML = translations.failedLoad || "Failed to load products"
+
+console.error(err)
+
+}
+
+}
+
+
+/* ===========================
+RENDER PRODUCTS
+=========================== */
+
+function renderProducts(products){
+
+const container = document.getElementById("products")
+
+container.innerHTML=""
+
+if(products.length===0){
+
+container.innerHTML = `<p>${translations.noProducts || "No products found"}</p>`
+
+return
+
+}
+
+products.forEach(p=>{
+
+const card=document.createElement("div")
+
+card.className="product-card"
+
+card.innerHTML=`
+
+<img loading="lazy" src="${p.image || 'Azania.png'}" alt="${p.name} product">
+
+<div class="product-title">${p.name}</div>
+
+<div class="product-price">R${p.price}</div>
+
+<button class="add-cart-btn" onclick="addToCart('${p._id}')">
+${translations.addToCart || "Add to Cart"}
+</button>
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+
+/* ===========================
+LANGUAGE SELECTOR
+=========================== */
+
+const languageSelect = document.getElementById("language-select")
+
+languageSelect.addEventListener("change", e => {
+
+loadLanguage(e.target.value)
+
+})
+
+
+/* ===========================
+INIT
+=========================== */
+
+window.onload = async ()=>{
+
+const savedLang = localStorage.getItem("azaniaLang") || "en"
+
+languageSelect.value = savedLang
+
+await loadLanguage(savedLang)
+
+loadProducts()
+
+}
+
+</script>

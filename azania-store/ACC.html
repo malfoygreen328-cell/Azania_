@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>User Account - Azania</title>
+
+<style>
+:root {
+--bottle-green:#0f3d2e;
+--bottle-green-light:#1f6b52;
+--gray-light:#f5f7f6;
+--text-light:#fff;
+--radius:12px;
+}
+
+*{box-sizing:border-box;font-family:Segoe UI,Arial;}
+
+body{
+margin:0;
+background:linear-gradient(135deg,#0f3d2e,#08261d);
+display:flex;
+justify-content:center;
+padding:40px 15px;
+}
+
+.account-container{
+width:100%;
+max-width:900px;
+background:#fff;
+border-radius:var(--radius);
+padding:30px;
+}
+
+h1{
+text-align:center;
+color:var(--bottle-green);
+}
+
+.tabs{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+justify-content:center;
+margin-bottom:20px;
+}
+
+.tab-btn{
+background:#eee;
+border:none;
+padding:10px 16px;
+border-radius:30px;
+cursor:pointer;
+}
+
+.tab-btn.active{
+background:var(--bottle-green);
+color:white;
+}
+
+.tab-content{
+display:none;
+background:var(--gray-light);
+padding:20px;
+border-radius:var(--radius);
+}
+
+.tab-content.active{
+display:block;
+}
+
+.logout-btn{
+margin-top:30px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:30px;
+background:var(--bottle-green);
+color:white;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="account-container">
+
+<h1>Your Azania Account</h1>
+
+<div class="tabs">
+<button class="tab-btn active" data-tab="profile">👤 Profile</button>
+<button class="tab-btn" data-tab="orders">📦 Orders</button>
+<button class="tab-btn" data-tab="payments">💳 Payment</button>
+<button class="tab-btn" data-tab="credit">💰 Credit</button>
+<button class="tab-btn" data-tab="support">🛠️ Support</button>
+</div>
+
+<div class="tab-content active" id="profile">
+<h2>Profile Info</h2>
+
+<p><strong>Name:</strong> <span id="user-name">Loading...</span></p>
+<p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
+
+</div>
+
+<div class="tab-content" id="orders">
+<h2>Your Orders</h2>
+<ul id="orders-list">
+<li>Loading orders...</li>
+</ul>
+</div>
+
+<div class="tab-content" id="payments">
+<h2>Payment Methods</h2>
+<p>No saved payment methods.</p>
+</div>
+
+<div class="tab-content" id="credit">
+<h2>Store Credit</h2>
+<p>Balance: R0.00</p>
+</div>
+
+<div class="tab-content" id="support">
+<h2>Support</h2>
+<p>Email: support@azania.co.za</p>
+</div>
+
+<button class="logout-btn" onclick="logoutUser()">Logout</button>
+
+</div>
+
+<script>
+
+const API_URL = "http://localhost:5000/api";
+
+/* -------------------------
+CHECK LOGIN
+--------------------------*/
+
+const token = localStorage.getItem("azaniaToken");
+
+if(!token){
+alert("Please login first");
+window.location.href="login.html";
+}
+
+/* -------------------------
+TAB SWITCHING
+--------------------------*/
+
+const tabButtons=document.querySelectorAll(".tab-btn");
+const tabContents=document.querySelectorAll(".tab-content");
+
+tabButtons.forEach(btn=>{
+btn.addEventListener("click",()=>{
+tabButtons.forEach(b=>b.classList.remove("active"));
+tabContents.forEach(c=>c.classList.remove("active"));
+
+btn.classList.add("active");
+document.getElementById(btn.dataset.tab).classList.add("active");
+});
+});
+
+/* -------------------------
+LOAD PROFILE
+--------------------------*/
+
+async function loadProfile(){
+
+try{
+
+const res=await fetch(`${API_URL}/auth/me`,{
+headers:{
+Authorization:`Bearer ${token}`
+}
+});
+
+const data=await res.json();
+
+document.getElementById("user-name").textContent=data.name;
+document.getElementById("user-email").textContent=data.email;
+
+loadOrders(data._id);
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
+
+/* -------------------------
+LOAD ORDERS
+--------------------------*/
+
+async function loadOrders(userId){
+
+try{
+
+const res=await fetch(`${API_URL}/orders/user/${userId}`,{
+headers:{
+Authorization:`Bearer ${token}`
+}
+});
+
+const orders=await res.json();
+
+const list=document.getElementById("orders-list");
+
+list.innerHTML="";
+
+if(orders.length===0){
+list.innerHTML="<li>No orders yet</li>";
+return;
+}
+
+orders.forEach(order=>{
+
+const li=document.createElement("li");
+
+li.textContent=`Order ${order._id} - R${order.totalAmount} - ${order.status}`;
+
+list.appendChild(li);
+
+});
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
+
+/* -------------------------
+LOGOUT
+--------------------------*/
+
+function logoutUser(){
+
+localStorage.removeItem("azaniaToken");
+localStorage.removeItem("azaniaUser");
+
+window.location.href="login.html";
+
+}
+
+/* -------------------------
+INIT
+--------------------------*/
+
+document.addEventListener("DOMContentLoaded",loadProfile);
+
+</script>
+
+</body>
+</html>
